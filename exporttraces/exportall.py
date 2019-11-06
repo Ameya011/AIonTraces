@@ -14,7 +14,9 @@
 # and the documentation to learn more
 
 from hansken.tool import run
-
+from hansken.trace import expand_types
+from datetime import datetime, date
+import os
 
 # we define a function to do the things we wanted to do
 def search_and_process(context):
@@ -25,11 +27,115 @@ def search_and_process(context):
         query = '''  '''
         # search for traces matching the query
         results = context.search(query)
+        properties = expand_types(results.model,
+        'account',
+        'accountArchive',
+        'address',
+        'addressBook',
+        'application',
+        'applicationArchive',
+        'attachment',
+        'audio',
+        'bookmark',
+        'bookmarkArchive',
+        'browserHistory',
+        'browserHistoryLog',
+        'calendar',
+        'calendarEntry',
+        'carved',
+        'certificate',
+        'chatConversation',
+        'chatEvent',
+        'chatLog',
+        'chatMessage',
+        'compressed',
+        'connection',
+        'connectionArchive',
+        'contact',
+        'cookie',
+        'cookieArchive',
+        'cryptoKey',
+        'cryptoKeyPair',
+        'cryptocurrencyWallet',
+        'data',
+        'deleted',
+        'document',
+        'email',
+        'emailArchive',
+        'emailFolder',
+        'encrypted',
+        'event',
+        'eventLog',
+        'executable',
+        'file',
+        'fileArchive',
+        'fileTransfer',
+        'fileTransferLog',
+        'filesystem',
+        'folder',
+        'gps',
+        'gpsLog',
+        'image',
+        'intercept',
+        'interceptLocation',
+'ipSession',
+'dns',
+'link',
+'memory',
+'memoryImage',
+'note',
+'noteFolder',
+'noteArchive',
+'phoneCall',
+'phoneCallLog',
+'picture',
+'process',
+'registry',
+'registryEntry',
+'signed',
+'task',
+'taskList',
+'textMessage',
+'textMessageArchive',
+'textMessageFolder',
+'thumbnail',
+'thumbnailArchive',
+'track',
+'unallocated',
+'url',
+'video',
+'volume',
+)
+
+        print(properties)
+        properties.remove("image.description")
+
+        properties2 = ["system.extracted."+prop for prop in properties] 
 
         for trace in results:
             # process the results, print some details for each trace we've found
             print(trace.uid, trace.name)
-            print(trace)
+#            for prop in properties2:
+#                print(prop)
+#                print(trace.get(prop))
+#                print(prop + "->"  + str(trace.get(prop)))
+#                if isinstance(trace.get(prop), datetime):
+#                    print("******************************************")
+#                    exit(0)
+
+            dates = [int(trace.get(prop).strftime("%s")) for prop in properties2 if isinstance(trace.get(prop), datetime)]
+            print(dates)
+            for D in dates:
+                Filename = str(D)+"-"+trace.uid
+                Group = D-(D%(5*60))
+                GroupName = str(Group)
+                n = 2
+                GroupName2= "/".join([GroupName[i:i+n] for i in range(0, len(GroupName), n)])
+                print (GroupName2)
+                os.makedirs(GroupName2,exist_ok=True)
+                with open(GroupName2+"/"+Filename,"w") as file:
+                    file.write(str(trace))
+
             #print(trace.dates)
 
 
