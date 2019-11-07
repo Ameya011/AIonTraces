@@ -1,22 +1,36 @@
 #!/usr/bin/python3
 import os
 import re
+from datetime import datetime
+import dateutil.parser
+
 
 def Decimal(d):
     return d
-
 
 import collections
 import collections.abc
 
 
 def flatten(d, parent_key='', sep='_'):
+    basetime = None
     items = []
     for k, v in d.items():
         new_key = parent_key + sep + k if parent_key else k
         if isinstance(v, collections.abc.MutableMapping):
             items.extend(flatten(v, new_key, sep=sep).items())
         else:
+            m= re.match("([0-9]{4}\-[0-9]{2}\-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z)", str(v))
+            if (m):
+                t = m.group(0)
+                datetime_object = dateutil.parser.parse(t)
+                if (basetime == None):
+                    v = ""
+                    basetime = datetime_object
+                else:
+                    diff = datetime_object - basetime
+                    v= int(diff.total_seconds())
+
             items.append((new_key, v))
     return dict(items)
 
