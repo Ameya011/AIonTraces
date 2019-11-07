@@ -44,16 +44,18 @@ def handleTrace(trace):
 def getTimestamp(filename):
     timestamp = re.search(filename_pattern, filename)
     if (timestamp):
-        return timestamp.group(1);
+        return int(timestamp.group(1));
     else:
-        return ""
+        return 0 
 
 def readFile(name):
     with open(name) as File:
         timestamp = getTimestamp(os.path.basename(name))
+        group = timestamp - (timestamp % (5*60))
+
         D = File.read()
         E = eval(D)
-        print(name+"|"+handleTrace(E["system"]["extracted"]) + "|" + timestamp)
+        print(name+"|"+handleTrace(E["system"]["extracted"]) + "|" + str(group))
 
 for root, dirs, files in os.walk("../data/15/46", topdown=False):
    for name in files:
