@@ -25,7 +25,7 @@ def handleTrace(trace):
     return " ".join([(a + sep + str(b)) for a, b in zip(d.keys(), d.values())])
 
 
-with open("1436857390-cc20147a-fa86-4c59-bff4-5d13fc63ae5b:0-2-0-f-f-2f-4-6-0-3-0") as File:
+with open(r"C:\Users\Ranieri\PycharmProjects\AIonTraces\data\export\14\43\06\75\00\1443067799-cc20147a-fa86-4c59-bff4-5d13fc63ae5b_0-2-0-d-800000c") as File:
     D = File.read()
     E = eval(D)
     print(E["system"]["extracted"])
