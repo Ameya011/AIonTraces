@@ -9,6 +9,7 @@ def Decimal(d):
 import collections
 import collections.abc
 
+filename_pattern = "^(\d*)(-.*)$"
 
 def flatten(d, parent_key='', sep='_'):
     items = []
@@ -26,12 +27,19 @@ def handleTrace(trace):
     d = flatten(trace, sep=sep)
     return re.sub("\n",""," ".join([(a + sep + str(b)) for a, b in zip(d.keys(), d.values())]))
 
+def getTimestamp(filename):
+    timestamp = re.search(filename_pattern, filename)
+    if (timestamp):
+        return timestamp.group(1);
+    else:
+        return ""
 
 def readFile(name):
     with open(name) as File:
+        timestamp = getTimestamp(os.path.basename(name))
         D = File.read()
         E = eval(D)
-        print(name+"|"+handleTrace(E["system"]["extracted"]))
+        print(name+"|"+handleTrace(E["system"]["extracted"]) + "|" + timestamp)
 
 for root, dirs, files in os.walk("../data/15/46", topdown=False):
    for name in files:
