@@ -57,8 +57,19 @@ def readFile(name):
         E = eval(D)
         print(name+"|"+handleTrace(E["system"]["extracted"]) + "|" + str(group))
 
-for root, dirs, files in os.walk("../data/15/46", topdown=False):
-   for name in files:
-      readFile(os.path.join(root, name))
+def readFileData(name):
+    with open(name) as File:
+        timestamp = getTimestamp(os.path.basename(name))
+        group = timestamp - (timestamp % (5*60))
+
+        D = File.read()
+        E = eval(D)
+    return E
+
+
+if __name__== "__main__":
+    for root, dirs, files in os.walk("../data/15/46", topdown=False):
+       for name in files:
+          readFile(os.path.join(root, name))
 
 
