@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import re
 
 def Decimal(d):
     return d
@@ -23,7 +24,7 @@ def flatten(d, parent_key='', sep='_'):
 def handleTrace(trace):
     sep = ' '
     d = flatten(trace, sep=sep)
-    return " ".join([(a + sep + str(b)) for a, b in zip(d.keys(), d.values())]).strip("\n")
+    return re.sub("\n",""," ".join([(a + sep + str(b)) for a, b in zip(d.keys(), d.values())]))
 
 
 def readFile(name):
